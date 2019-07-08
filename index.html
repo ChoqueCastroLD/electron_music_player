@@ -1,0 +1,378 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="fonts/icon.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <title>Shoko's M4A player</title>
+    <style>
+        header{
+        position: absolute;
+        width: 40%;
+        height: 100%;
+        transition-delay: 2000ms;
+        transition-duration: 500ms;
+        left: -40%;
+    }
+    canvas {
+        position: relative;
+        bottom: 0px;
+        opacity: 0.5;
+        pointer-events: none;
+        z-index: -10;
+    }
+    #hoverman{
+        position: absolute;
+        left:100%;
+        bottom: 45%;
+        z-index: 100;
+        height: 10%;
+        width: 10%;
+        opacity: 0.4;
+        transition: 500ms;
+    }
+    #hoverman p{
+        position: relative;
+        left: -19;
+    }
+    #hoverman:hover{
+        transition: 500ms;
+        opacity: 0.8;
+    }
+    header:hover{
+        transition-delay: 50ms;
+        transition-duration: 500ms;
+        width: 40%;
+        left: 0px;
+    }
+    main{
+        position: absolute;
+        width: 60%;
+        height: 100%;
+        right: 0px;
+        overflow: hidden;
+        transition-delay: 50ms;
+        transition-duration: 500ms;
+    }
+    #volumenDiv{
+        position: relative;
+        width: 30%;
+        transition-duration: 100ms;
+    }
+    #volumenDiv > i{
+        position: relative;
+        transition-duration: 100ms;
+        transform: translateY(140%);
+        opacity: 1;
+    }
+    #volumenDiv > p{
+        position: relative;
+        transition-duration: 100ms;
+        transform: translateY(-140%);
+        opacity: 0;
+    }
+    #volumenDiv:hover > p{
+        transition-duration: 100ms;
+        opacity: 1;
+    }
+    #volumenDiv:active > p{
+        transition-duration: 100ms;
+        opacity: 1;
+    }
+    #volumenDiv:hover{
+        width: 100%;
+        transition-duration: 100ms;
+    }
+    #volumenDiv:active{
+        width: 100%;
+        transition-duration: 100ms;
+    }
+    #volumenDiv:hover > i{
+        transition-duration: 100ms;
+        pointer-events: none;
+        opacity: 0.7;
+    }
+    #velocidadDiv{
+        position: relative;
+        width: 30%;
+        transition-duration: 100ms;
+    }
+    #velocidadDiv > i{
+        position: relative;
+        transition-duration: 100ms;
+        transform: translateY(140%);
+        opacity: 1;
+    }
+    #velocidadDiv > p{
+        position: relative;
+        transition-duration: 100ms;
+        transform: translateY(-140%);
+        opacity: 0;
+    }
+    #velocidadDiv:hover > p{
+        transition-duration: 100ms;
+        opacity: 1;
+    }
+    #velocidadDiv:active > p{
+        transition-duration: 100ms;
+        opacity: 1;
+    }
+    #velocidadDiv:hover{
+        width: 100%;
+        transition-duration: 100ms;
+    }
+    #velocidadDiv:active{
+        width: 100%;
+        transition-duration: 100ms;
+    }
+    #velocidadDiv:hover > i{
+        transition-duration: 100ms;
+        pointer-events: none;
+        opacity: 0.7;
+    }
+    main:hover{
+        transition-delay: 2000ms;
+        transition-duration: 500ms;
+        width: 100%;
+    }
+    html:not(:hover) main{
+        transition-delay: 2000ms;
+        transition-duration: 500ms;
+        width: 100%;
+    }
+    #controlesDiv{
+        position: absolute;
+        right:0;
+        transition-delay: 300ms;
+        transition-duration: 1000ms;
+        opacity: 0.2;
+        bottom: -140;
+    }
+    #controlesDiv:hover{
+        transition-duration: 500ms;
+        transition-delay: 0ms;
+        opacity: 0.95;
+        bottom: 0;
+    }
+    #letrasDiv {
+        margin-left: -5px;
+    }
+    #menu {
+        display: block;
+        height: 99%;
+        overflow-x: hidden;
+        border-right-color: rgba(145, 145, 145, 0.4);
+        border-right-width: 1px;
+        border-right-style: solid;
+    }
+    #menu::-webkit-scrollbar-track
+    {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+        background-color: #F5F5F5;
+    }
+    #menu::-webkit-scrollbar
+    {
+        width: 5px;
+        background-color: rgba(245, 245, 245, 0.3);
+    }
+    #menu::-webkit-scrollbar-thumb
+    {
+        background-color: rgba(39, 211, 202, 0.25);
+    }
+    #menu:hover::-webkit-scrollbar-thumb
+    {
+        background-color: rgba(39, 211, 202, 0.45);
+    }
+    .row{
+        margin: 0px;
+    }
+    .tabs .tab a{
+        color:rgb(155, 155, 155);
+    }
+    .tabs .tab a:hover {
+        background-color:#eee;
+        color:rgb(83, 83, 83);
+    }
+    .tabs .tab a.active {
+        color:rgb(98, 202, 197);
+    }
+    .tabs .indicator {
+        background-color:rgb(98, 202, 197);
+    }
+    .cancionLI.hideable{
+        color:red;
+    }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="row">
+            <div class="col s12" id="menu">
+                <ul>
+                    <li>
+                        <h5>jSong</h5>
+                        <p class="gray-text">Reproductor de Musica</p>
+                    </li>
+                    <li>
+                        <div class="divider"></div>
+                    </li>
+                    <li>
+                        <ul id="tabs-swipe-demo" class="tabs">
+                            <li class="tab col s6 cyan-text"><a href="#test-swipe-1">Canciones</a></li>
+                            <li class="tab col s6 disabled"><a href="#test-swipe-2">Opciones</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div id="test-swipe-1" class="col s12">
+                            <ul id="songs" href="#!" draggable="false" class="collapsible"></ul>
+                            <center>
+                                <a class="btn-floating btn-small waves-effect waves-light pulse" onclick="selectSongs();"><i
+                                        class="material-icons">add</i></a>
+                                <a class="btn-floating btn-small waves-effect waves-light pulse" onclick="actualizarListaHTML();"><i
+                                        class="material-icons">refresh</i></a>
+                                <a class="btn-floating btn-small waves-effect waves-light pulse" onclick="borrarTodasCanciones();"><i
+                                        class="material-icons">delete_forever</i></a>
+                                <br><br><br><br><br>
+                            </center>
+                        </div>
+                        <div id="test-swipe-2" class="col s12">
+                            <ul>
+                                <li>
+                                    <a class="waves-effect waves-teal btn-flat" href="#!" id="cargar" draggable="false">Añadir
+                                        Cancion(es)</a>
+                                </li>
+                                <li>
+                                    <a class="waves-effect waves-teal btn-flat" href="#!" onclick="borrarTodasCanciones();"
+                                        draggable="false">Eliminar Todas las Canciones</a>
+                                </li>
+                                <li>
+                                    <div class="divider"></div>
+                                </li>
+                                <li>
+                                    <div class="section right-align">
+                                        <h5>jSong Music Player</h5>
+                                        <p>-Choque Castro Luis David</p>
+                                        <p>10/02/2019</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div id="hoverman" class="valign-wrapper">
+            <p class="flow-text center-align left-align"><i class="medium material-icons">play_arrow</i></p>
+        </div>
+    </header>
+    <div id="debug" hidden>
+        <input type="text" id="newLetra">
+
+        <a href="#!"><input type="button" id="rewind" value="Retroceder"></a>
+        <input type="button" id="remove" value="Remover">
+        <input type="button" id="addLetra" value="Añadir">
+        <input type="button" id="edit" value="Editar">
+    </div>
+
+
+    <main>
+        <div id="modal1" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h4>Información de la Canción</h4>
+                <p>Titulo</p>
+                <p>Autor</p>
+                <p>Letras Disponibles</p>
+                <p>Duración</p>
+                <p>Ubicación</p>
+                <p>Portada</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12" id="letrasDiv">
+                <h5 class="flow-text" id="test"></h5>
+                <div class="valign-wrapper">
+                    <h4 id="letra" class="center-align"></h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <canvas id="analyser_render"></canvas>
+            <div id="controlesDiv" class="col s12 black white-text">
+                <div class="row valign-wrapper">
+                    <div class="col s1">
+                        <p id="currentTime" class="right-align">0:00</p>
+                    </div>
+                    <div class="col s10">
+                        <p class="range-field center-align"><input type="range" id="timeline" max="100" min="0" value="0"></p>
+                    </div>
+                    <div class="col s1">
+                        <p id="totalTime" class="left-align">0:00</p>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s2">
+                        <center>
+                            <a href="#!" class="center-align" draggable="false"><img src="assets/repetirlista.png" id="modo"
+                                    data-value="Repetir Lista" draggable="false"></a>
+                        </center>
+                    </div>
+                    <div class="col s2 white-text">
+                        <center>
+                            <div id="velocidadDiv">
+                                <i class="material-icons" id="velocidadChange">exposure_zero</i>
+                                <p class="center-align range-field"><input type="range" id="velocidad" max="1" min="-1"
+                                        value="0"></p>
+                            </div>
+                        </center>
+                    </div>
+                    <div class="col s4">
+                        <center>
+                            <div class="row">
+                                <div class="col s4">
+                                    <a href="#!" onclick="reproducirAnterior();" draggable="false"><img src="assets/previous.png"
+                                            id="previous" data-value="Reproducir" draggable="false"></a>
+                                </div>
+                                <div class="col s4">
+                                    <a href="#!" draggable="false"><img src="assets/play.png" id="play" data-value="Reproducir"
+                                            draggable="false"></a>
+                                </div>
+                                <div class="col s4">
+                                    <a href="#!" onclick="reproducirSiguiente();" draggable="false"><img src="assets/next.png"
+                                            id="next" data-value="Reproducir" draggable="false"></a>
+                                </div>
+                            </div>
+                        </center>
+                    </div>
+                    <div class="col s2">
+                        <center>
+                            <div id="volumenDiv">
+                                <i class="material-icons" id="volumeChange">volume_up</i>
+                                <p class="center-align range-field"><input type="range" id="volumen" max="100" min="0"
+                                        value="100"></p>
+                            </div>
+                        </center>
+                    </div>
+                    <div class="col s2">
+                        <center>
+                            <a href="#!" class="center-align" draggable="false"><img src="assets/maximizar.png" id="fullscreen"
+                                    data-value="Maximizar" draggable="false"></a>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div hidden><audio controls autoplay name="media" src="" id="player" type="audio/x-m4a" hidden></audio></div>
+
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script src="./renderer.js"></script>
+</body>
+
+</html>

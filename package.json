@@ -1,0 +1,14 @@
+{
+  "name": "shokomp3",
+  "version": "1.0.0",
+  "description": "Un simple reproductor mp3",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Shoko",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^4.0.3"
+  }
+}
