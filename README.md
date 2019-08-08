@@ -8,6 +8,8 @@ Setup:
 $ git clone https://github.com/ChoqueCastroLD/electron_music_player
 2. Instalar dependencias
 $ npm install
+3. Instalar Electron (globalmente)
+$ npm install electron -g
 
 Execution:
 
