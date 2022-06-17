@@ -9,6 +9,6 @@
   "author": "Shoko",
   "license": "ISC",
   "dependencies": {
-    "electron": "^4.0.3"
+    "electron": "^15.5.5"
   }
 }
